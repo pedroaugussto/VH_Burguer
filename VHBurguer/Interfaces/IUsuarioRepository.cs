@@ -14,11 +14,11 @@ namespace VHBurguer.Interfaces
 
         bool EmailExiste(string email);
 
-        void Adcionar(Usuario usuario);
+        void Adicionar(Usuario usuario);
 
         void Atualizar(Usuario usuario);
 
         void Remover(int id);
-        Usuario? ObterPorEmail(int email);
+        
     }
 }
