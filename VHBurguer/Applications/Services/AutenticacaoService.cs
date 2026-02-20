@@ -32,7 +32,7 @@ namespace VHBurguer.Applications.Services
 
             if (usuario == null)
             {
-                throw new DomainExceptions("E-mail ou senha invalidos");
+                throw new DomainExceptions("O usuário não foi encontrado");
             }
 
             //Comparar a senha digitada com a senha armazenada
