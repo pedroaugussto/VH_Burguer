@@ -35,6 +35,12 @@ namespace VHBurguer.Applications.Services
                 throw new DomainExceptions("O usuário não foi encontrado");
             }
 
+            //Verificar se o usuario esta ativo
+            if (usuario.StatusUsuario == false)
+            {
+                throw new DomainExceptions("O usuario esta inativo");
+            }
+
             //Comparar a senha digitada com a senha armazenada
             if (!VerificarSenha(loginDto.Senha, usuario.Senha))
             {
