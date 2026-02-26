@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 using VHBurguer.Applications.Autenticacao;
 using VHBurguer.Applications.Services;
@@ -20,7 +21,32 @@ namespace VHBurguer
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Value: Bearer TokenJWT"
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+            });
 
             // Chamar nossa conexao com o banco aqui na program
             builder.Services.AddDbContext<VH_BurguerContext>(options => options.UseSqlServer
@@ -38,9 +64,19 @@ namespace VHBurguer
             builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
             builder.Services.AddScoped<CategoriaService>();
 
+            //Promocao
+            builder.Services.AddScoped<IPromocaoRepository, PromocaoRepository>();
+            builder.Services.AddScoped<PromocaoService>();
+
+            //Log de Alteracao
+            builder.Services.AddScoped<ILogAlteracaoProdutoRepository, LogAlteracaoProdutoRepository>();
+            builder.Services.AddScoped<LogAlteracaoProdutoService>();
+
             // JWT
             builder.Services.AddScoped<GeradorTokenJwt>();
             builder.Services.AddScoped<AutenticacaoService>();
+
+            
 
             // Configura o sistema de autenticação da aplicação.
             // Aqui estamos dizendo que o tipo de autenticação padrão será JWT Bearer.

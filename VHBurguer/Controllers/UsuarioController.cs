@@ -31,26 +31,29 @@ namespace VHBurguer.Controllers
         [HttpGet("{id}")]
         public ActionResult<LerUsuarioDto> ObterPorId(int id)
         {
-            LerUsuarioDto usuario = _service.ObterPorId(id);
-            if (usuario == null)
+            try
             {
-                return NotFound(); // NAO ENCONTRADO - HTTP 404
+                LerUsuarioDto usuario = _service.ObterPorId(id);
+                return Ok(usuario);
             }
-
-            return Ok(usuario);
+            catch (DomainExceptions ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("email/{email}")]
         public ActionResult<LerUsuarioDto> ObterPorEmail(string email)
         {
-            LerUsuarioDto usuario = _service.ObterPorEmail(email);
-
-            if(usuario == null)
+            try
             {
-                return NotFound();
+                LerUsuarioDto usuario = _service.ObterPorEmail(email);
+                return Ok(usuario);
             }
-
-            return Ok(usuario); 
+            catch (DomainExceptions ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // Post -> Envia dados (cadastrar, enviar dados...)
